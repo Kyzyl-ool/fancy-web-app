@@ -1,16 +1,17 @@
 import { Dropdown } from '@fancy-web-app/ui-kit';
 import {
   FormEventHandler,
+  UIEventHandler,
   useCallback,
   useEffect,
   useRef,
   useState,
 } from 'react';
 import { MemoizedDataSourceController, Option } from './data-source-controller';
-import { KeyboardSuggestsController } from '@fancy-web-app/smart-suggests';
+import { KeyboardController } from '@fancy-web-app/smart-suggests';
 
 const dataSourceController = new MemoizedDataSourceController();
-const keyboardSuggestsController = new KeyboardSuggestsController({
+const keyboardSuggestsController = new KeyboardController({
   dataSourceController,
 });
 
@@ -58,6 +59,12 @@ export function DropdownController(props: DropdownControllerProps) {
         optionsContainerRef
       );
   }, [optionsContainerRef]);
+  const onScroll: UIEventHandler<HTMLDivElement> = useCallback(
+    ({ currentTarget: { scrollTop } }) => {
+      console.log(scrollTop);
+    },
+    []
+  );
 
   return (
     <Dropdown
@@ -80,6 +87,7 @@ export function DropdownController(props: DropdownControllerProps) {
       onArrowUp={keyboardSuggestsController.onArrowUp}
       onArrowDown={keyboardSuggestsController.onArrowDown}
       onEnterPressed={keyboardSuggestsController.onEnterPressed}
+      onScroll={onScroll}
     />
   );
 }

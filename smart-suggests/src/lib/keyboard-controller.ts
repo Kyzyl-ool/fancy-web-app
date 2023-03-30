@@ -1,13 +1,13 @@
 import React from 'react';
 import EventEmitter from 'events';
-import { DataSourceController, Option } from './smart-suggests';
+import { DataSourceController, Option } from './data-source-controller';
 
 interface Params<T extends Option> {
   dataSourceController: DataSourceController<T>;
   dropdownOptionsContainerRef?: React.MutableRefObject<HTMLDivElement>;
 }
 
-export class KeyboardSuggestsController<T extends Option> extends EventEmitter {
+export class KeyboardController<T extends Option> extends EventEmitter {
   protected dropdownOptionsContainerRef?: React.RefObject<HTMLDivElement>;
   protected dataSourceController: DataSourceController<T>;
   protected hoveredOptionIndex = 0;
@@ -48,5 +48,8 @@ export class KeyboardSuggestsController<T extends Option> extends EventEmitter {
   setDropdownOptionsContainerRef = (ref: React.RefObject<HTMLDivElement>) => {
     this.dropdownOptionsContainerRef = ref;
     this.emit('update');
+  };
+  public onScroll = ({ currentTarget }: Event) => {
+    console.log(currentTarget);
   };
 }

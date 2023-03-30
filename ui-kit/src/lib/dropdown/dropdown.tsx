@@ -1,5 +1,11 @@
 import styles from './dropdown.module.scss';
-import React, { HTMLProps, useCallback, useEffect, useRef } from 'react';
+import React, {
+  HTMLProps,
+  UIEventHandler,
+  useCallback,
+  useEffect,
+  useRef,
+} from 'react';
 import classNames from 'classnames';
 import ReactDOM from 'react-dom';
 import { useClickOutside } from '@fancy-web-app/react-ui-utils';
@@ -51,6 +57,11 @@ export interface DropdownProps
   onArrowUp: () => void;
   onArrowDown: () => void;
   onEnterPressed: () => void;
+  /**
+   * Dropdown options container scroll event handler
+   * @param event
+   */
+  onScroll: UIEventHandler<HTMLDivElement>;
 }
 
 export function Dropdown({
@@ -71,6 +82,7 @@ export function Dropdown({
   inputRef,
   optionsContainerRef,
   onEnterPressed,
+  onScroll,
 }: DropdownProps) {
   const containerRef = useRef(null);
 
@@ -148,6 +160,7 @@ export function Dropdown({
           <div
             className={styles['options-container']}
             ref={optionsContainerRef}
+            onScroll={onScroll}
           >
             {options.map(({ key, label }) => (
               <div

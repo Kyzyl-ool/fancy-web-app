@@ -1,2 +1,2 @@
-export { DataSourceController } from './lib/smart-suggests';
-export { KeyboardSuggestsController } from './lib/keyboard-suggests';
+export { DataSourceController } from './lib/data-source-controller';
+export { KeyboardController } from './lib/keyboard-controller';
