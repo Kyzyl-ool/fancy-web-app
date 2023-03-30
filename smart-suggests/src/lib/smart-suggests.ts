@@ -73,8 +73,10 @@ export abstract class DataSourceController<
     this.emit('update');
   };
   get options(): OptionType[] {
-    return [...this.searchResultsMap.values()].filter((option) =>
-      this.predicate(option, this.searchString)
+    return [...this.searchResultsMap.values()].filter(
+      (option) =>
+        !this.selectedOptionsMap.has(option.key) &&
+        this.predicate(option, this.searchString)
     );
   }
   get selectedOptions(): OptionType[] {
