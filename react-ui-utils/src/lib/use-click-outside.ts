@@ -25,10 +25,10 @@ export const useClickOutside = ({ refs, onClickOutside }: Params) => {
   );
 
   useEffect(() => {
-    document.addEventListener('click', documentClickHandler);
+    document.addEventListener('mousedown', documentClickHandler);
 
     return () => {
-      document.removeEventListener('click', documentClickHandler);
+      document.removeEventListener('mousedown', documentClickHandler);
     };
   }, [documentClickHandler]);
 };

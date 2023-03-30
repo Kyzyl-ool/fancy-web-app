@@ -14,8 +14,8 @@ export abstract class DataSourceController<
 > extends EventEmitter {
   protected pageSize: number;
   protected bufferSize: number;
-  protected selectedOptions = new Map<string, OptionType>();
-  protected searchResults = new Map<string, OptionType>();
+  protected selectedOptionsMap = new Map<string, OptionType>();
+  protected searchResultsMap = new Map<string, OptionType>();
   public searchString = '';
 
   protected constructor({ pageSize, bufferSize }: Params) {
@@ -38,7 +38,7 @@ export abstract class DataSourceController<
     result.forEach((value) => {
       const { key } = value;
 
-      this.searchResults.set(key, value);
+      this.searchResultsMap.set(key, value);
     });
     this.emit('update');
 
@@ -52,15 +52,20 @@ export abstract class DataSourceController<
   protected abstract predicate(option: OptionType, search: string): boolean;
 
   public onSelectOption = (key: string) => {
-    if (this.searchResults.has(key)) {
-      this.selectedOptions.set(key, this.searchResults.get(key) as OptionType);
+    if (this.searchResultsMap.has(key)) {
+      this.selectedOptionsMap.set(
+        key,
+        this.searchResultsMap.get(key) as OptionType
+      );
+      this.emit('update');
     } else {
       this.emit('error', `this.searchResults does not contain ${key}`);
     }
   };
 
   public onRemoveSelectedOption = (key: string) => {
-    this.selectedOptions.delete(key);
+    this.selectedOptionsMap.delete(key);
+    this.emit('update');
   };
 
   public setSearchString = (search: string) => {
@@ -68,8 +73,11 @@ export abstract class DataSourceController<
     this.emit('update');
   };
   get options(): OptionType[] {
-    return [...this.searchResults.values()].filter((option) =>
+    return [...this.searchResultsMap.values()].filter((option) =>
       this.predicate(option, this.searchString)
     );
+  }
+  get selectedOptions(): OptionType[] {
+    return [...this.selectedOptionsMap.values()];
   }
 }

@@ -8,6 +8,7 @@ const dataSourceController = new MemoizedDataSourceController();
 export interface DropdownControllerProps {}
 export function DropdownController(props: DropdownControllerProps) {
   const [options, setOptions] = useState<Option[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
   const [isDropdownOpened, setIsDropdownOpened] = useState(false);
 
   const onClick = useCallback(() => {
@@ -26,6 +27,7 @@ export function DropdownController(props: DropdownControllerProps) {
   );
   const onUpdate = useCallback(() => {
     setOptions(dataSourceController.options);
+    setSelectedOptions(dataSourceController.selectedOptions);
   }, []);
   useEffect(() => {
     dataSourceController.on('update', onUpdate);
@@ -38,6 +40,7 @@ export function DropdownController(props: DropdownControllerProps) {
   return (
     <Dropdown
       options={options}
+      selectedOptions={selectedOptions}
       isDropdownOpened={isDropdownOpened}
       hoveredOperandKey={''}
       hoveredOptionKey={''}

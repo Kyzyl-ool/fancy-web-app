@@ -4,6 +4,9 @@
   padding: 8px 16px;
   border-width: 1px;
   border-radius: $size-border-radius;
+  display: flex;
+  gap: 8px;
+
 
   &-opened {
     border-radius: $size-border-radius $size-border-radius 0 0;
@@ -59,5 +62,38 @@
   &:hover {
     cursor: default;
     background-color: $color-bg-base;
+  }
+}
+
+.operand {
+  background-color: $color-bg-secondary;
+  padding: 4px 8px;
+  transition: background-color 0.1s ease;
+  cursor: default;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &:hover {
+    background-color: $color-bg-secondary-hover;
+  }
+}
+
+.operand-close-button {
+  display: inline-flex;
+  cursor: pointer;
+  path {
+    fill: $color-text-base;
+  }
+
+  &:hover {
+    path {
+      fill: $color-text-hover;
+    }
+  }
+  &:active {
+    path {
+      fill: $color-text-active;
+    }
   }
 }

@@ -3,6 +3,7 @@ import React, { HTMLProps, useRef } from 'react';
 import classNames from 'classnames';
 import ReactDOM from 'react-dom';
 import { useClickOutside } from '@fancy-web-app/react-ui-utils';
+import { ReactComponent as CrossIcon } from '../../icons/cross.svg';
 
 interface Option {
   key: string;
@@ -19,6 +20,10 @@ export interface DropdownProps
    * Options to select
    */
   options: Option[];
+  /**
+   * Selected options
+   */
+  selectedOptions: Option[];
   /**
    * When option was clicked or selected from keyboard
    * @param option
@@ -58,6 +63,7 @@ export function Dropdown({
   dropdownOverlay = document.body,
   onClickOutside,
   inputProps,
+  selectedOptions,
 }: DropdownProps) {
   const containerRef = useRef(null);
   const optionsContainerRef = useRef(null);
@@ -79,6 +85,17 @@ export function Dropdown({
         )}
         onClick={onClick}
       >
+        {selectedOptions.map(({ key, label }) => (
+          <div key={key} className={styles['operand']}>
+            {label}
+            <div
+              className={styles['operand-close-button']}
+              onClick={() => onDeselect(key)}
+            >
+              <CrossIcon />
+            </div>
+          </div>
+        ))}
         <input type="text" className={styles['input']} {...inputProps} />
       </div>
       {isDropdownOpened &&
@@ -88,7 +105,11 @@ export function Dropdown({
             ref={optionsContainerRef}
           >
             {options.map(({ key, label }) => (
-              <div key={key} className={styles['option']}>
+              <div
+                key={key}
+                className={styles['option']}
+                onClick={() => onSelect(key)}
+              >
                 {label}
               </div>
             ))}
