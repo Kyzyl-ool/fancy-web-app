@@ -8,7 +8,6 @@ const dataSourceController = new MemoizedDataSourceController();
 export interface DropdownControllerProps {}
 export function DropdownController(props: DropdownControllerProps) {
   const [options, setOptions] = useState<Option[]>([]);
-  const [inputValue, setInputValue] = useState('');
   const [isDropdownOpened, setIsDropdownOpened] = useState(false);
 
   const onClick = useCallback(() => {
