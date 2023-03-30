@@ -2,6 +2,7 @@ import EventEmitter from 'events';
 
 interface Params {
   pageSize: number;
+  bufferSize: number;
 }
 
 interface Option {
@@ -12,14 +13,20 @@ export abstract class DataSourceController<
   OptionType extends Option
 > extends EventEmitter {
   protected pageSize: number;
-  protected selectedOptions: Record<string, OptionType> = {};
-  protected searchResults: Record<string, OptionType> = {};
+  protected bufferSize: number;
+  protected selectedOptions = new Map<string, OptionType>();
+  protected searchResults = new Map<string, OptionType>();
   public searchString = '';
 
-  protected constructor({ pageSize }: Params) {
+  protected constructor({ pageSize, bufferSize }: Params) {
     super();
 
     this.pageSize = pageSize;
+    this.bufferSize = bufferSize;
+  }
+
+  public async init() {
+    this.fetchPage(this.searchString, 1);
   }
 
   protected fetchPage = async (
@@ -31,7 +38,7 @@ export abstract class DataSourceController<
     result.forEach((value) => {
       const { key } = value;
 
-      this.searchResults[key] = value;
+      this.searchResults.set(key, value);
     });
     this.emit('update');
 
@@ -45,11 +52,15 @@ export abstract class DataSourceController<
   protected abstract predicate(option: OptionType, search: string): boolean;
 
   public onSelectOption = (key: string) => {
-    this.selectedOptions[key] = this.searchResults[key];
+    if (this.searchResults.has(key)) {
+      this.selectedOptions.set(key, this.searchResults.get(key) as OptionType);
+    } else {
+      this.emit('error', `this.searchResults does not contain ${key}`);
+    }
   };
 
   public onRemoveSelectedOption = (key: string) => {
-    delete this.selectedOptions[key];
+    this.selectedOptions.delete(key);
   };
 
   public setSearchString = (search: string) => {
@@ -57,7 +68,7 @@ export abstract class DataSourceController<
     this.emit('update');
   };
   get options(): OptionType[] {
-    return Object.values(this.searchResults).filter((option) =>
+    return [...this.searchResults.values()].filter((option) =>
       this.predicate(option, this.searchString)
     );
   }

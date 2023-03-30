@@ -99,7 +99,7 @@ export function Dropdown({
                   styles['empty-option-placeholder']
                 )}
               >
-                No items found
+                Empty
               </div>
             )}
           </div>,
