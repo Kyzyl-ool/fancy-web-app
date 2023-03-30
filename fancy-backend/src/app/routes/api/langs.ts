@@ -1,8 +1,6 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { filter, from, skip, take, toArray } from 'rxjs';
-import { langsList } from '../../langs';
-
-const LIMIT = 20;
+import { langsList } from '../../../langs';
 
 export default async function (fastify: FastifyInstance) {
   fastify.get(
@@ -12,7 +10,8 @@ export default async function (fastify: FastifyInstance) {
 
       // getting query params
       const searchString = request.query['search'];
-      const skipAmount = Number(request.query['skip']);
+      const pageNumber = Number(request.query['page-number']) || 1;
+      const pageSize = Number(request.query['page-size']) || 10;
       // ---
 
       // handling search string
@@ -27,14 +26,12 @@ export default async function (fastify: FastifyInstance) {
       }
       // ---
 
-      // handling skip
-      if (skipAmount) {
-        langs$ = langs$.pipe(skip(skipAmount));
-      }
+      // handling page number
+      langs$ = langs$.pipe(skip(pageNumber * pageSize));
       // ---
 
       // limiting amount of entities
-      langs$ = langs$.pipe(take(LIMIT));
+      langs$ = langs$.pipe(take(pageSize));
       // ---
 
       const result = await langs$.pipe(toArray()).toPromise();
