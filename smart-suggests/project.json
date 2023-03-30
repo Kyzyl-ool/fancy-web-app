@@ -1,0 +1,23 @@
+{
+  "name": "smart-suggests",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "smart-suggests/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/vite:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/smart-suggests"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["smart-suggests/**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}
