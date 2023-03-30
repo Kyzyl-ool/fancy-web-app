@@ -15,7 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@fancy-web-app/ui-kit": ["ui-kit/src/index.ts"]
+      "@fancy-web-app/react-ui-utils": ["react-ui-utils/src/index.ts"],
+      "@fancy-web-app/ui-kit": ["ui-kit/src/index.ts"],
+      "@fancy-web-app/smart-suggests": ["smart-suggests/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

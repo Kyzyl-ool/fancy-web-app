@@ -1,7 +1,8 @@
 import styles from './dropdown.module.scss';
-import React, { HTMLProps } from 'react';
+import React, { HTMLProps, useCallback, useRef } from 'react';
 import classNames from 'classnames';
 import ReactDOM from 'react-dom';
+import { useClickOutside } from '@fancy-web-app/react-ui-utils';
 
 interface Option {
   key: string;
@@ -54,14 +55,32 @@ export function Dropdown({
   onSelect,
   dropdownOverlay = document.body,
 }: DropdownProps) {
+  const containerRef = useRef(null);
+  const optionsContainerRef = useRef(null);
+
+  const onClickOutside = useCallback(() => {
+    console.log(123);
+  }, []);
+
+  useClickOutside({
+    refs: [containerRef, optionsContainerRef],
+    onClickOutside,
+  });
+
   return (
-    <div className={classNames(styles['container'], className)}>
-      <div className={styles['operands-container']}>
+    <div
+      className={classNames(styles['container'], className)}
+      ref={containerRef}
+    >
+      <div className={styles['operands-container']} onClick={onClick}>
         <input type="text" className={styles['input']} />
       </div>
       {isDropdownOpened &&
         ReactDOM.createPortal(
-          <div className={styles['options-container']}>
+          <div
+            className={styles['options-container']}
+            ref={optionsContainerRef}
+          >
             {options.map(({ key, label }) => (
               <div key={key} className={styles['option']}>
                 {label}
