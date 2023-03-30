@@ -14,6 +14,7 @@ export abstract class DataSourceController<
 > extends EventEmitter {
   protected pageSize: number;
   protected bufferSize: number;
+  protected lastFetchedPage: number;
   protected selectedOptionsMap = new Map<string, OptionType>();
   protected searchResultsMap = new Map<string, OptionType>();
   public searchString = '';
@@ -23,11 +24,21 @@ export abstract class DataSourceController<
 
     this.pageSize = pageSize;
     this.bufferSize = bufferSize;
+    this.lastFetchedPage = 0;
   }
 
-  public async init() {
+  public init = async () => {
     this.fetchPage(this.searchString, 1);
-  }
+
+    this.on('update', () => {
+      if (
+        this.searchResultsMap.size - this.selectedOptionsMap.size <
+        this.bufferSize
+      ) {
+        this.fetchPage(this.searchString, this.lastFetchedPage + 1);
+      }
+    });
+  };
 
   protected fetchPage = async (
     search: string,
@@ -41,6 +52,7 @@ export abstract class DataSourceController<
       this.searchResultsMap.set(key, value);
     });
     this.emit('update');
+    this.lastFetchedPage = pageNumber;
 
     return result;
   };

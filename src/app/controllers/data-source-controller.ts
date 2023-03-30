@@ -14,7 +14,7 @@ const memoizer = new Memoizer({ cacheMaxSize: 100 });
 
 export class MemoizedDataSourceController extends DataSourceController<Option> {
   constructor() {
-    super({ pageSize: PAGE_SIZE, bufferSize: PAGE_SIZE * 10 });
+    super({ pageSize: PAGE_SIZE, bufferSize: PAGE_SIZE * 2 });
     this.init();
   }
 

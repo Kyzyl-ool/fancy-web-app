@@ -1,7 +1,7 @@
 @import "../../theme/theme";
 
 .operands-container {
-  padding: 8px 16px;
+  padding: 16px 24px;
   border-width: 1px;
   border-radius: $size-border-radius;
   display: flex;
@@ -27,6 +27,7 @@
 .input {
   border: 0;
   min-width: 100px;
+  height: 32px;
 
   &:focus {
     outline: none;
@@ -73,6 +74,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  height: 32px;
+  box-sizing: border-box;
 
   &:hover {
     background-color: $color-bg-secondary-hover;
