@@ -92,6 +92,16 @@ export function Dropdown({
                 {label}
               </div>
             ))}
+            {!options.length && (
+              <div
+                className={classNames(
+                  styles['option'],
+                  styles['empty-option-placeholder']
+                )}
+              >
+                No items found
+              </div>
+            )}
           </div>,
           dropdownOverlay
         )}

@@ -49,7 +49,6 @@ export function DropdownController(props: DropdownControllerProps) {
         onInput,
         value: dataSourceController.searchString,
         placeholder: options.length ? 'Type to search...' : 'No items found',
-        disabled: !options.length,
       }}
       onClickOutside={onClickOutside}
     />

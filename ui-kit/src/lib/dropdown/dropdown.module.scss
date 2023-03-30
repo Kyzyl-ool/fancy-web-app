@@ -1,4 +1,4 @@
-@import "../../theme/colors";
+@import "../../theme/theme";
 
 .operands-container {
   padding: 8px 16px;
@@ -50,5 +50,14 @@
   }
   &:active {
     background-color: $color-bg-active;
+  }
+}
+
+.empty-option-placeholder {
+  color: $color-text-disabled;
+
+  &:hover {
+    cursor: default;
+    background-color: $color-bg-base;
   }
 }

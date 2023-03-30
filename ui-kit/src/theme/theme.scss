@@ -5,4 +5,7 @@ $size-border-radius: 8px;
 
 $color-bg-hover: darken($color-bg-base, 10%);
 $color-bg-active: darken($color-bg-base, 15%);
+
 $color-border: darken($color-bg-base, 50%);
+
+$color-text-disabled: lighten($color-text-base, 50%);
