@@ -10,6 +10,7 @@ export function DropdownController(props: DropdownControllerProps) {
   const [options, setOptions] = useState<Option[]>([]);
   const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
   const [isDropdownOpened, setIsDropdownOpened] = useState(false);
+  const [hoveredOptionKey, setHoveredOptionKey] = useState<string>();
 
   const onClick = useCallback(() => {
     if (options.length) {
@@ -28,6 +29,7 @@ export function DropdownController(props: DropdownControllerProps) {
   const onUpdate = useCallback(() => {
     setOptions(dataSourceController.options);
     setSelectedOptions(dataSourceController.selectedOptions);
+    setHoveredOptionKey(dataSourceController.hoveredOptionKey);
   }, []);
   useEffect(() => {
     dataSourceController.on('update', onUpdate);
@@ -43,7 +45,7 @@ export function DropdownController(props: DropdownControllerProps) {
       selectedOptions={selectedOptions}
       isDropdownOpened={isDropdownOpened}
       hoveredOperandKey={''}
-      hoveredOptionKey={''}
+      hoveredOptionKey={hoveredOptionKey}
       onClick={onClick}
       onSelect={dataSourceController.onSelectOption}
       onDeselect={dataSourceController.onRemoveSelectedOption}
@@ -53,6 +55,9 @@ export function DropdownController(props: DropdownControllerProps) {
         placeholder: options.length ? 'Type to search...' : 'No items found',
       }}
       onClickOutside={onClickOutside}
+      onBackspacePressed={dataSourceController.onRemoveLastOption}
+      onArrowUp={dataSourceController.onArrowUp}
+      onArrowDown={dataSourceController.onArrowDown}
     />
   );
 }

@@ -1,5 +1,5 @@
 import styles from './dropdown.module.scss';
-import React, { HTMLProps, useRef } from 'react';
+import React, { HTMLProps, useCallback, useEffect, useRef } from 'react';
 import classNames from 'classnames';
 import ReactDOM from 'react-dom';
 import { useClickOutside } from '@fancy-web-app/react-ui-utils';
@@ -45,10 +45,13 @@ export interface DropdownProps
   /**
    * Dropdown option to be hovered
    */
-  hoveredOptionKey: string;
+  hoveredOptionKey?: string;
   dropdownOverlay?: HTMLElement;
   onClickOutside: () => void;
-  inputProps: HTMLProps<HTMLInputElement>;
+  inputProps: Omit<HTMLProps<HTMLInputElement>, 'ref'>;
+  onBackspacePressed: () => void;
+  onArrowUp: () => void;
+  onArrowDown: () => void;
 }
 
 export function Dropdown({
@@ -64,14 +67,49 @@ export function Dropdown({
   onClickOutside,
   inputProps,
   selectedOptions,
+  onBackspacePressed,
+  onArrowUp,
+  onArrowDown,
 }: DropdownProps) {
   const containerRef = useRef(null);
   const optionsContainerRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useClickOutside({
     refs: [containerRef, optionsContainerRef],
     onClickOutside,
   });
+
+  const keyboardHandler = useCallback(
+    ({ key }: KeyboardEvent) => {
+      console.log(key);
+      if (inputRef?.current === document.activeElement) {
+        switch (key) {
+          case 'Backspace': {
+            onBackspacePressed();
+            break;
+          }
+          case 'ArrowUp': {
+            onArrowUp();
+            break;
+          }
+          case 'ArrowDown': {
+            onArrowDown();
+            break;
+          }
+        }
+      }
+    },
+    [onArrowDown, onArrowUp, onBackspacePressed]
+  );
+
+  useEffect(() => {
+    document.addEventListener('keydown', keyboardHandler);
+
+    return () => {
+      document.removeEventListener('keydown', keyboardHandler);
+    };
+  }, [keyboardHandler]);
 
   return (
     <div
@@ -96,7 +134,12 @@ export function Dropdown({
             </div>
           </div>
         ))}
-        <input type="text" className={styles['input']} {...inputProps} />
+        <input
+          type="text"
+          className={styles['input']}
+          ref={inputRef}
+          {...inputProps}
+        />
       </div>
       {isDropdownOpened &&
         ReactDOM.createPortal(
@@ -107,7 +150,10 @@ export function Dropdown({
             {options.map(({ key, label }) => (
               <div
                 key={key}
-                className={styles['option']}
+                className={classNames(
+                  styles['option'],
+                  hoveredOptionKey === key && styles['option-hovered']
+                )}
                 onClick={() => onSelect(key)}
               >
                 {label}

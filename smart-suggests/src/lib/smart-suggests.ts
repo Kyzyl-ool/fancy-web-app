@@ -17,6 +17,7 @@ export abstract class DataSourceController<
   protected lastFetchedPage: number;
   protected selectedOptionsMap = new Map<string, OptionType>();
   protected searchResultsMap = new Map<string, OptionType>();
+  protected hoveredOptionIndex = 0;
   public searchString = '';
 
   protected constructor({ pageSize, bufferSize }: Params) {
@@ -79,6 +80,16 @@ export abstract class DataSourceController<
     this.selectedOptionsMap.delete(key);
     this.emit('update');
   };
+  public onRemoveLastOption = () => {
+    if (this.selectedOptionsMap.size) {
+      const lastOptionKey = [...this.selectedOptionsMap.keys()].at(-1);
+      if (!lastOptionKey) {
+        this.emit('error', 'Option to be deleted is absent');
+        return;
+      }
+      this.onRemoveSelectedOption(lastOptionKey);
+    }
+  };
 
   public setSearchString = (search: string) => {
     this.searchString = search;
@@ -94,4 +105,17 @@ export abstract class DataSourceController<
   get selectedOptions(): OptionType[] {
     return [...this.selectedOptionsMap.values()];
   }
+  get hoveredOptionKey(): string {
+    return this.options[this.hoveredOptionIndex].key;
+  }
+  onArrowUp = () => {
+    this.hoveredOptionIndex =
+      (this.hoveredOptionIndex - 1 + this.options.length) % this.options.length;
+    this.emit('update');
+  };
+  onArrowDown = () => {
+    this.hoveredOptionIndex =
+      (this.hoveredOptionIndex + 1) % this.options.length;
+    this.emit('update');
+  };
 }
