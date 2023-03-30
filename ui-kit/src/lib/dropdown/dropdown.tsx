@@ -1,14 +1,23 @@
 import styles from './dropdown.module.scss';
 
 /* eslint-disable-next-line */
-export interface DropdownProps {}
+export interface DropdownProps {
+  isNative?: boolean;
+}
 
-export function Dropdown(props: DropdownProps) {
+export function Dropdown({isNative}: DropdownProps) {
+  if (isNative) {
+
   return (
-    <div className={styles['container']}>
-      <h1>Welcome to Dropdown!</h1>
-    </div>
+    <select className={styles['container']}>
+      <option>Hello</option>
+    </select>
   );
+  }
+
+  return <div>
+
+  </div>
 }
 
 export default Dropdown;
