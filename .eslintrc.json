@@ -1,11 +1,6 @@
 {
   "extends": ["plugin:@nrwl/nx/react", "./.eslintrc.base.json"],
-  "plugins": ["prettier", "unused-imports"],
   "ignorePatterns": ["!**/*"],
-  "rules": {
-    "prettier/prettier": "error",
-    "unused-imports/no-unused-imports": "error"
-  },
   "overrides": [
     {
       "files": ["*.ts", "*.tsx"],

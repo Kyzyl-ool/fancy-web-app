@@ -343,4 +343,6 @@ export const langs = {
   japanese: "японский",
   yarandi: "яран",
   yaoure: "яурэ",
-}
+};
+
+export const langsList = Object.entries(langs).map(([key, label]) => ({key, label}));

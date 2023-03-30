@@ -5,7 +5,8 @@
   "scripts": {
     "start": "nx serve",
     "build": "nx build",
-    "test": "nx test"
+    "test": "nx test",
+    "backend:serve": "nx run fancy-backend:serve"
   },
   "private": true,
   "dependencies": {
@@ -16,6 +17,7 @@
     "fastify-plugin": "~4.5.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "rxjs": "^7.8.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
