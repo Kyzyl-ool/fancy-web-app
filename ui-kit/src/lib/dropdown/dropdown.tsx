@@ -49,6 +49,8 @@ export interface DropdownProps
   dropdownOverlay?: HTMLElement;
   onClickOutside: () => void;
   inputProps: Omit<HTMLProps<HTMLInputElement>, 'ref'>;
+  inputRef: React.RefObject<HTMLInputElement>;
+  optionsContainerRef: React.RefObject<HTMLDivElement>;
   onBackspacePressed: () => void;
   onArrowUp: () => void;
   onArrowDown: () => void;
@@ -70,10 +72,10 @@ export function Dropdown({
   onBackspacePressed,
   onArrowUp,
   onArrowDown,
+  inputRef,
+  optionsContainerRef,
 }: DropdownProps) {
   const containerRef = useRef(null);
-  const optionsContainerRef = useRef(null);
-  const inputRef = useRef<HTMLInputElement>(null);
 
   useClickOutside({
     refs: [containerRef, optionsContainerRef],
@@ -82,7 +84,6 @@ export function Dropdown({
 
   const keyboardHandler = useCallback(
     ({ key }: KeyboardEvent) => {
-      console.log(key);
       if (inputRef?.current === document.activeElement) {
         switch (key) {
           case 'Backspace': {

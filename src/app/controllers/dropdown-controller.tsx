@@ -1,8 +1,18 @@
 import { Dropdown } from '@fancy-web-app/ui-kit';
-import { FormEventHandler, useCallback, useEffect, useState } from 'react';
+import {
+  FormEventHandler,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { MemoizedDataSourceController, Option } from './data-source-controller';
+import { KeyboardSuggestsController } from '@fancy-web-app/smart-suggests';
 
 const dataSourceController = new MemoizedDataSourceController();
+const keyboardSuggestsController = new KeyboardSuggestsController({
+  dataSourceController,
+});
 
 /* eslint-disable-next-line */
 export interface DropdownControllerProps {}
@@ -11,6 +21,8 @@ export function DropdownController(props: DropdownControllerProps) {
   const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
   const [isDropdownOpened, setIsDropdownOpened] = useState(false);
   const [hoveredOptionKey, setHoveredOptionKey] = useState<string>();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const optionsContainerRef = useRef<HTMLDivElement>(null);
 
   const onClick = useCallback(() => {
     if (options.length) {
@@ -29,15 +41,23 @@ export function DropdownController(props: DropdownControllerProps) {
   const onUpdate = useCallback(() => {
     setOptions(dataSourceController.options);
     setSelectedOptions(dataSourceController.selectedOptions);
-    setHoveredOptionKey(dataSourceController.hoveredOptionKey);
+    setHoveredOptionKey(keyboardSuggestsController.hoveredOptionKey);
   }, []);
   useEffect(() => {
     dataSourceController.on('update', onUpdate);
+    keyboardSuggestsController.on('update', onUpdate);
 
     return () => {
       dataSourceController.off('update', onUpdate);
+      keyboardSuggestsController.off('update', onUpdate);
     };
   }, [onUpdate]);
+  useEffect(() => {
+    optionsContainerRef &&
+      keyboardSuggestsController.setDropdownOptionsContainerRef(
+        optionsContainerRef
+      );
+  }, [optionsContainerRef]);
 
   return (
     <Dropdown
@@ -54,10 +74,12 @@ export function DropdownController(props: DropdownControllerProps) {
         value: dataSourceController.searchString,
         placeholder: options.length ? 'Type to search...' : 'No items found',
       }}
+      inputRef={inputRef}
+      optionsContainerRef={optionsContainerRef}
       onClickOutside={onClickOutside}
       onBackspacePressed={dataSourceController.onRemoveLastOption}
-      onArrowUp={dataSourceController.onArrowUp}
-      onArrowDown={dataSourceController.onArrowDown}
+      onArrowUp={keyboardSuggestsController.onArrowUp}
+      onArrowDown={keyboardSuggestsController.onArrowDown}
     />
   );
 }

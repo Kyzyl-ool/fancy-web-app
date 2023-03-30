@@ -5,7 +5,7 @@ interface Params {
   bufferSize: number;
 }
 
-interface Option {
+export interface Option {
   key: string;
 }
 
@@ -17,7 +17,6 @@ export abstract class DataSourceController<
   protected lastFetchedPage: number;
   protected selectedOptionsMap = new Map<string, OptionType>();
   protected searchResultsMap = new Map<string, OptionType>();
-  protected hoveredOptionIndex = 0;
   public searchString = '';
 
   protected constructor({ pageSize, bufferSize }: Params) {
@@ -105,17 +104,4 @@ export abstract class DataSourceController<
   get selectedOptions(): OptionType[] {
     return [...this.selectedOptionsMap.values()];
   }
-  get hoveredOptionKey(): string {
-    return this.options[this.hoveredOptionIndex].key;
-  }
-  onArrowUp = () => {
-    this.hoveredOptionIndex =
-      (this.hoveredOptionIndex - 1 + this.options.length) % this.options.length;
-    this.emit('update');
-  };
-  onArrowDown = () => {
-    this.hoveredOptionIndex =
-      (this.hoveredOptionIndex + 1) % this.options.length;
-    this.emit('update');
-  };
 }
