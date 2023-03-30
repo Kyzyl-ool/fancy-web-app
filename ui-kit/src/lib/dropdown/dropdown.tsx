@@ -1,6 +1,7 @@
 import styles from './dropdown.module.scss';
 import React, { HTMLProps } from 'react';
 import classNames from 'classnames';
+import ReactDOM from 'react-dom';
 
 interface Option {
   key: string;
@@ -55,9 +56,17 @@ export function Dropdown({
 
   return (
     <div className={mergedClassnames}>
-      {options.map(({ key, label }) => (
-        <div key={key}>{label}</div>
-      ))}
+      <input type="text" />
+      {ReactDOM.createPortal(
+        <div>
+          {options.map(({ key, label }) => (
+            <div key={key} className={styles['option']}>
+              {label}
+            </div>
+          ))}
+        </div>,
+        document.body
+      )}
     </div>
   );
 }

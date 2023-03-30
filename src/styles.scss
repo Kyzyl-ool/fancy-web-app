@@ -1,3 +1,7 @@
+@import "../ui-kit/src/theme/colors";
+
 body {
   font-family: Inter, serif;
+  background-color: $color-bg-base;
+  color: $color-text-base;
 }
