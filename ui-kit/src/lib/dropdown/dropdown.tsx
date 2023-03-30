@@ -22,7 +22,7 @@ export interface DropdownProps
    * When option was clicked or selected from keyboard
    * @param option
    */
-  onSelect: (option: Option) => void;
+  onSelect: (optionKey: string) => void;
   /**
    * When dropdown itself was clicked
    */
@@ -31,7 +31,7 @@ export interface DropdownProps
    * When removing selected option clicking by cross or pressing Backspace from keyboard
    * @param option
    */
-  onDeselect: (option: Option) => void;
+  onDeselect: (optionKey: string) => void;
   /**
    * Selected option to be hovered
    */
@@ -40,6 +40,7 @@ export interface DropdownProps
    * Dropdown option to be hovered
    */
   hoveredOptionKey: string;
+  dropdownOverlay?: HTMLElement;
 }
 
 export function Dropdown({
@@ -51,22 +52,24 @@ export function Dropdown({
   onClick,
   onDeselect,
   onSelect,
+  dropdownOverlay = document.body,
 }: DropdownProps) {
-  const mergedClassnames = classNames(styles['container'], className);
-
   return (
-    <div className={mergedClassnames}>
-      <input type="text" />
-      {ReactDOM.createPortal(
-        <div>
-          {options.map(({ key, label }) => (
-            <div key={key} className={styles['option']}>
-              {label}
-            </div>
-          ))}
-        </div>,
-        document.body
-      )}
+    <div className={classNames(styles['container'], className)}>
+      <div className={styles['operands-container']}>
+        <input type="text" className={styles['input']} />
+      </div>
+      {isDropdownOpened &&
+        ReactDOM.createPortal(
+          <div className={styles['options-container']}>
+            {options.map(({ key, label }) => (
+              <div key={key} className={styles['option']}>
+                {label}
+              </div>
+            ))}
+          </div>,
+          dropdownOverlay
+        )}
     </div>
   );
 }

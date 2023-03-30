@@ -1,5 +1,8 @@
 $color-primary: #5f5ff5;
 $color-bg-base: #fefefe;
 $color-text-base: #000;
+$size-border-radius: 8px;
 
 $color-bg-hover: darken($color-bg-base, 10%);
+$color-bg-active: darken($color-bg-base, 15%);
+$color-border: darken($color-bg-base, 50%);
