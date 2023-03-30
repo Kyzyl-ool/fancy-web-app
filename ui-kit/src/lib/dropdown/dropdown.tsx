@@ -39,10 +39,6 @@ export interface DropdownProps
    */
   onDeselect: (optionKey: string) => void;
   /**
-   * Selected option to be hovered
-   */
-  hoveredOperandKey: string;
-  /**
    * Dropdown option to be hovered
    */
   hoveredOptionKey?: string;
@@ -54,13 +50,13 @@ export interface DropdownProps
   onBackspacePressed: () => void;
   onArrowUp: () => void;
   onArrowDown: () => void;
+  onEnterPressed: () => void;
 }
 
 export function Dropdown({
   className,
   isDropdownOpened,
   hoveredOptionKey,
-  hoveredOperandKey,
   options,
   onClick,
   onDeselect,
@@ -74,6 +70,7 @@ export function Dropdown({
   onArrowDown,
   inputRef,
   optionsContainerRef,
+  onEnterPressed,
 }: DropdownProps) {
   const containerRef = useRef(null);
 
@@ -98,10 +95,14 @@ export function Dropdown({
             onArrowDown();
             break;
           }
+          case 'Enter': {
+            onEnterPressed();
+            break;
+          }
         }
       }
     },
-    [onArrowDown, onArrowUp, onBackspacePressed]
+    [inputRef, onArrowDown, onArrowUp, onBackspacePressed, onEnterPressed]
   );
 
   useEffect(() => {

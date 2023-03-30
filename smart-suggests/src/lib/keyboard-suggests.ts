@@ -37,6 +37,14 @@ export class KeyboardSuggestsController<T extends Option> extends EventEmitter {
       (this.hoveredOptionIndex + 1) % this.dataSourceController.options.length;
     this.emit('update');
   };
+  onEnterPressed = () => {
+    this.dataSourceController.onSelectOption(this.hoveredOptionKey);
+    this.emit('update');
+  };
+  onBackspacePressed = () => {
+    this.onArrowDown();
+    this.dataSourceController.onRemoveLastOption();
+  };
   setDropdownOptionsContainerRef = (ref: React.RefObject<HTMLDivElement>) => {
     this.dropdownOptionsContainerRef = ref;
     this.emit('update');

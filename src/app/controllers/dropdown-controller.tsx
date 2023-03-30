@@ -64,7 +64,6 @@ export function DropdownController(props: DropdownControllerProps) {
       options={options}
       selectedOptions={selectedOptions}
       isDropdownOpened={isDropdownOpened}
-      hoveredOperandKey={''}
       hoveredOptionKey={hoveredOptionKey}
       onClick={onClick}
       onSelect={dataSourceController.onSelectOption}
@@ -77,9 +76,10 @@ export function DropdownController(props: DropdownControllerProps) {
       inputRef={inputRef}
       optionsContainerRef={optionsContainerRef}
       onClickOutside={onClickOutside}
-      onBackspacePressed={dataSourceController.onRemoveLastOption}
+      onBackspacePressed={keyboardSuggestsController.onBackspacePressed}
       onArrowUp={keyboardSuggestsController.onArrowUp}
       onArrowDown={keyboardSuggestsController.onArrowDown}
+      onEnterPressed={keyboardSuggestsController.onEnterPressed}
     />
   );
 }
