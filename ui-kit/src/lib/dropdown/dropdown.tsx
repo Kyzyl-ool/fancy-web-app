@@ -1,5 +1,5 @@
 import styles from './dropdown.module.scss';
-import React, { HTMLProps, useCallback, useRef } from 'react';
+import React, { HTMLProps, useRef } from 'react';
 import classNames from 'classnames';
 import ReactDOM from 'react-dom';
 import { useClickOutside } from '@fancy-web-app/react-ui-utils';
@@ -10,7 +10,7 @@ interface Option {
 }
 
 export interface DropdownProps
-  extends Omit<HTMLProps<HTMLElement>, 'onSelect'> {
+  extends Omit<HTMLProps<HTMLElement>, 'onSelect' | 'onInput'> {
   /**
    * Opens dropdown
    */
@@ -42,6 +42,8 @@ export interface DropdownProps
    */
   hoveredOptionKey: string;
   dropdownOverlay?: HTMLElement;
+  onClickOutside: () => void;
+  inputProps: HTMLProps<HTMLInputElement>;
 }
 
 export function Dropdown({
@@ -54,13 +56,11 @@ export function Dropdown({
   onDeselect,
   onSelect,
   dropdownOverlay = document.body,
+  onClickOutside,
+  inputProps,
 }: DropdownProps) {
   const containerRef = useRef(null);
   const optionsContainerRef = useRef(null);
-
-  const onClickOutside = useCallback(() => {
-    console.log(123);
-  }, []);
 
   useClickOutside({
     refs: [containerRef, optionsContainerRef],
@@ -72,8 +72,14 @@ export function Dropdown({
       className={classNames(styles['container'], className)}
       ref={containerRef}
     >
-      <div className={styles['operands-container']} onClick={onClick}>
-        <input type="text" className={styles['input']} />
+      <div
+        className={classNames(
+          styles['operands-container'],
+          isDropdownOpened && styles['operands-container-opened']
+        )}
+        onClick={onClick}
+      >
+        <input type="text" className={styles['input']} {...inputProps} />
       </div>
       {isDropdownOpened &&
         ReactDOM.createPortal(

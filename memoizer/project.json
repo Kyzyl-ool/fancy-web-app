@@ -1,0 +1,23 @@
+{
+  "name": "memoizer",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "memoizer/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/vite:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/memoizer"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["memoizer/**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}
