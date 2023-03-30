@@ -1,13 +1,13 @@
 import { Dropdown } from '@fancy-web-app/ui-kit';
-import { FormEventHandler, useCallback, useState } from 'react';
-import { MemoizedDataSourceController } from './data-source-controller';
+import { FormEventHandler, useCallback, useEffect, useState } from 'react';
+import { MemoizedDataSourceController, Option } from './data-source-controller';
 
 const dataSourceController = new MemoizedDataSourceController();
 
 /* eslint-disable-next-line */
 export interface DropdownControllerProps {}
 export function DropdownController(props: DropdownControllerProps) {
-  const [options, setOptions] = useState([]);
+  const [options, setOptions] = useState<Option[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isDropdownOpened, setIsDropdownOpened] = useState(false);
 
@@ -25,6 +25,16 @@ export function DropdownController(props: DropdownControllerProps) {
     },
     []
   );
+  const onUpdate = useCallback(() => {
+    setOptions(dataSourceController.options);
+  }, []);
+  useEffect(() => {
+    dataSourceController.on('update', onUpdate);
+
+    return () => {
+      dataSourceController.off('update', onUpdate);
+    };
+  }, [onUpdate]);
 
   return (
     <Dropdown

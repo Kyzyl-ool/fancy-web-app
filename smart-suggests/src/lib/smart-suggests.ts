@@ -20,25 +20,28 @@ export abstract class DataSourceController<
     super();
 
     this.pageSize = pageSize;
-
-    const originalFn = this.fetchPage;
-    this.fetchPage = async function (search, pageNumber) {
-      const result = await originalFn(search, pageNumber);
-
-      result.forEach((value) => {
-        const { key } = value;
-
-        this.searchResults[key] = value;
-      });
-
-      return result;
-    };
   }
 
-  protected abstract fetchPage(
+  protected fetchPage = async (
+    search: string,
+    pageNumber: number
+  ): Promise<OptionType[]> => {
+    const result = await this._fetchPage(search, pageNumber);
+
+    result.forEach((value) => {
+      const { key } = value;
+
+      this.searchResults[key] = value;
+    });
+    this.emit('update');
+
+    return result;
+  };
+  protected abstract _fetchPage(
     search: string,
     pageNumber: number
   ): Promise<OptionType[]>;
+
   protected abstract predicate(option: OptionType, search: string): boolean;
 
   public onSelectOption = (key: string) => {

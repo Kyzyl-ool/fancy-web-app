@@ -5,7 +5,7 @@ import { Memoizer } from '@fancy-web-app/memoizer';
 
 const PAGE_SIZE = 10;
 
-interface Option {
+export interface Option {
   key: string;
   label: string;
 }
@@ -15,10 +15,12 @@ const memoizer = new Memoizer({ cacheMaxSize: 100 });
 export class MemoizedDataSourceController extends DataSourceController<Option> {
   constructor() {
     super({ pageSize: PAGE_SIZE });
+    this.fetchPage('', 1);
   }
 
-  protected fetchPage = memoizer.memoizeFn(
+  protected _fetchPage = memoizer.memoizeFn(
     async (search: string, pageNumber: number): Promise<Option[]> => {
+      console.log('fetching...');
       const { data } = await axios.get('/api/langs', {
         params: {
           'page-size': PAGE_SIZE,
@@ -27,11 +29,11 @@ export class MemoizedDataSourceController extends DataSourceController<Option> {
         },
       });
 
+      console.log('fetched:', data);
       return data;
     }
   );
 
-  protected predicate(option: Option, search: string): boolean {
-    return option.label.toLowerCase().includes(search.toLowerCase());
-  }
+  protected predicate = (option: Option, search: string): boolean =>
+    option.label.toLowerCase().includes(search.toLowerCase());
 }
