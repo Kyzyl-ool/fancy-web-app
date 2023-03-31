@@ -72,6 +72,8 @@ export function DropdownController({
         onInput,
         value: dataSourceController.searchString,
         placeholder: options.length ? 'Type to search...' : 'No items found',
+        onFocus: onClick,
+        onBlur: closeDropdown,
       }}
       onClickOutside={closeDropdown}
       onBackspacePressed={keyboardController.onBackspacePressed}
