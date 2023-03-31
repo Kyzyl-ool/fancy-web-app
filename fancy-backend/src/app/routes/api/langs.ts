@@ -27,7 +27,7 @@ export default async function (fastify: FastifyInstance) {
       // ---
 
       // handling page number
-      langs$ = langs$.pipe(skip(pageNumber * pageSize));
+      langs$ = langs$.pipe(skip((pageNumber - 1) * pageSize));
       // ---
 
       // limiting amount of entities

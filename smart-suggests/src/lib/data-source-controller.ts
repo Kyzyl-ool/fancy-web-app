@@ -92,7 +92,7 @@ export abstract class DataSourceController<
 
   public setSearchString = (search: string) => {
     this.searchString = search;
-    this.emit('update');
+    this.fetchPage(this.searchString, 1);
   };
   get options(): OptionType[] {
     return [...this.searchResultsMap.values()].filter(
