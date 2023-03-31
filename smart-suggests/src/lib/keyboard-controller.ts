@@ -36,8 +36,10 @@ export class KeyboardController<T extends Option> extends EventEmitter {
     this.emit('update');
   };
   onBackspacePressed = () => {
-    this.onArrowDown();
-    this.dataSourceController.onRemoveLastOption();
+    if (!this.dataSourceController.searchString) {
+      this.onArrowDown();
+      this.dataSourceController.onRemoveLastOption();
+    }
   };
 
   getHoveredOptionIndex = () => {

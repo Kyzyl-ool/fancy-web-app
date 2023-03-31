@@ -1,5 +1,9 @@
 @import "../../theme/theme";
 
+.container {
+  width: 500px;
+}
+
 .operands-container {
   padding: 16px 56px 16px 24px;
   border-width: 1px;
@@ -51,6 +55,7 @@
   path {
     fill: $color-text-active;
   }
+
   transform: scale(1.5) rotate(180deg);
 }
 
@@ -59,7 +64,6 @@
 }
 
 .operands-container, .options-container {
-  width: 500px;
   border-style: solid;
   border-color: $color-border;
   box-sizing: border-box;
@@ -73,10 +77,6 @@
   &:focus {
     outline: none;
   }
-}
-
-.container {
-
 }
 
 .options-container {

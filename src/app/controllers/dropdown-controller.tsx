@@ -53,6 +53,9 @@ export function DropdownController(props: DropdownControllerProps) {
       keyboardSuggestsController.off('update', onUpdate);
     };
   }, [onUpdate]);
+  const toggleDropdown = useCallback(() => {
+    setIsDropdownOpened((prevState) => !prevState);
+  }, []);
 
   return (
     <Dropdown
@@ -76,6 +79,7 @@ export function DropdownController(props: DropdownControllerProps) {
       onOptionHover={keyboardSuggestsController.setHoveredOptionIndex}
       optionsContainerRef={optionsContainerRef}
       inputRef={inputRef}
+      onAngleButtonClick={toggleDropdown}
     />
   );
 }

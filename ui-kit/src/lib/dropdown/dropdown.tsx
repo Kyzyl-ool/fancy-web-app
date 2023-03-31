@@ -53,6 +53,7 @@ export interface DropdownProps
   onEnterPressed: () => void;
   onOptionHover: (optionIndex: number) => void;
   optionsContainerRef: React.RefObject<HTMLDivElement>;
+  onAngleButtonClick: () => void;
 }
 
 export function Dropdown({
@@ -74,6 +75,7 @@ export function Dropdown({
   onOptionHover,
   optionsContainerRef,
   inputRef,
+  onAngleButtonClick,
 }: DropdownProps) {
   const containerRef = useRef(null);
 
@@ -149,6 +151,7 @@ export function Dropdown({
     },
     [
       hoveredOptionIndex,
+      inputRef,
       onArrowDown,
       onArrowUp,
       onBackspacePressed,
@@ -199,6 +202,10 @@ export function Dropdown({
             styles['arrow'],
             isDropdownOpened && styles['arrow-active']
           )}
+          onClick={(event) => {
+            event.stopPropagation();
+            onAngleButtonClick();
+          }}
         >
           <AngleIcon />
         </div>
