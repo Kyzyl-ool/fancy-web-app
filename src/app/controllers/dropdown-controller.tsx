@@ -9,14 +9,12 @@ import {
 import { MemoizedDataSourceController, Option } from './data-source-controller';
 import { KeyboardController } from '@fancy-web-app/smart-suggests';
 
-const dataSourceController = new MemoizedDataSourceController();
+const dataSourceController = new MemoizedDataSourceController('/api/langs');
 const keyboardSuggestsController = new KeyboardController({
   dataSourceController,
 });
 
-/* eslint-disable-next-line */
-export interface DropdownControllerProps {}
-export function DropdownController(props: DropdownControllerProps) {
+export function DropdownController() {
   const [options, setOptions] = useState<Option[]>([]);
   const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
   const [isDropdownOpened, setIsDropdownOpened] = useState(false);

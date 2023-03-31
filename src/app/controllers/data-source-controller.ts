@@ -13,15 +13,17 @@ export interface Option {
 const memoizer = new Memoizer({ cacheMaxSize: 100 });
 
 export class MemoizedDataSourceController extends DataSourceController<Option> {
-  constructor() {
+  endpoint: string;
+
+  constructor(endpoint: string) {
     super({ pageSize: PAGE_SIZE, bufferSize: PAGE_SIZE * 2 });
+    this.endpoint = endpoint;
     this.init();
   }
 
   protected _fetchPage = memoizer.memoizeFn(
     async (search: string, pageNumber: number): Promise<Option[]> => {
-      console.log('fetching...');
-      const { data } = await axios.get('/api/langs', {
+      const { data } = await axios.get(this.endpoint, {
         params: {
           'page-size': PAGE_SIZE,
           'page-number': pageNumber,
@@ -29,7 +31,6 @@ export class MemoizedDataSourceController extends DataSourceController<Option> {
         },
       });
 
-      console.log('fetched:', data);
       return data;
     }
   );
