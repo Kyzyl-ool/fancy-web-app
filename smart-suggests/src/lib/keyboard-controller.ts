@@ -1,23 +1,16 @@
-import React from 'react';
 import EventEmitter from 'events';
 import { DataSourceController, Option } from './data-source-controller';
 
 interface Params<T extends Option> {
   dataSourceController: DataSourceController<T>;
-  dropdownOptionsContainerRef?: React.MutableRefObject<HTMLDivElement>;
 }
 
 export class KeyboardController<T extends Option> extends EventEmitter {
-  protected dropdownOptionsContainerRef?: React.RefObject<HTMLDivElement>;
   protected dataSourceController: DataSourceController<T>;
   protected hoveredOptionIndex = 0;
 
-  constructor({
-    dropdownOptionsContainerRef,
-    dataSourceController,
-  }: Params<T>) {
+  constructor({ dataSourceController }: Params<T>) {
     super();
-    this.dropdownOptionsContainerRef = dropdownOptionsContainerRef;
     this.dataSourceController = dataSourceController;
   }
 
@@ -44,12 +37,5 @@ export class KeyboardController<T extends Option> extends EventEmitter {
   onBackspacePressed = () => {
     this.onArrowDown();
     this.dataSourceController.onRemoveLastOption();
-  };
-  setDropdownOptionsContainerRef = (ref: React.RefObject<HTMLDivElement>) => {
-    this.dropdownOptionsContainerRef = ref;
-    this.emit('update');
-  };
-  public onScroll = ({ currentTarget }: Event) => {
-    console.log(currentTarget);
   };
 }

@@ -51,8 +51,6 @@ export interface DropdownProps
   dropdownOverlay?: HTMLElement;
   onClickOutside: () => void;
   inputProps: Omit<HTMLProps<HTMLInputElement>, 'ref'>;
-  inputRef: React.RefObject<HTMLInputElement>;
-  optionsContainerRef: React.RefObject<HTMLDivElement>;
   onBackspacePressed: () => void;
   onArrowUp: () => void;
   onArrowDown: () => void;
@@ -79,12 +77,12 @@ export function Dropdown({
   onBackspacePressed,
   onArrowUp,
   onArrowDown,
-  inputRef,
-  optionsContainerRef,
   onEnterPressed,
   onScroll,
 }: DropdownProps) {
   const containerRef = useRef(null);
+  const optionsContainerRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useClickOutside({
     refs: [containerRef, optionsContainerRef],

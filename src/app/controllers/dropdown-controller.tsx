@@ -4,7 +4,6 @@ import {
   UIEventHandler,
   useCallback,
   useEffect,
-  useRef,
   useState,
 } from 'react';
 import { MemoizedDataSourceController, Option } from './data-source-controller';
@@ -22,8 +21,6 @@ export function DropdownController(props: DropdownControllerProps) {
   const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
   const [isDropdownOpened, setIsDropdownOpened] = useState(false);
   const [hoveredOptionKey, setHoveredOptionKey] = useState<string>();
-  const inputRef = useRef<HTMLInputElement>(null);
-  const optionsContainerRef = useRef<HTMLDivElement>(null);
 
   const onClick = useCallback(() => {
     if (options.length) {
@@ -53,12 +50,6 @@ export function DropdownController(props: DropdownControllerProps) {
       keyboardSuggestsController.off('update', onUpdate);
     };
   }, [onUpdate]);
-  useEffect(() => {
-    optionsContainerRef &&
-      keyboardSuggestsController.setDropdownOptionsContainerRef(
-        optionsContainerRef
-      );
-  }, [optionsContainerRef]);
   const onScroll: UIEventHandler<HTMLDivElement> = useCallback(
     ({ currentTarget: { scrollTop } }) => {
       console.log(scrollTop);
@@ -80,8 +71,6 @@ export function DropdownController(props: DropdownControllerProps) {
         value: dataSourceController.searchString,
         placeholder: options.length ? 'Type to search...' : 'No items found',
       }}
-      inputRef={inputRef}
-      optionsContainerRef={optionsContainerRef}
       onClickOutside={onClickOutside}
       onBackspacePressed={keyboardSuggestsController.onBackspacePressed}
       onArrowUp={keyboardSuggestsController.onArrowUp}
