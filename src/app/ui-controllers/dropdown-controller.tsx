@@ -1,20 +1,20 @@
 import { Dropdown } from '@fancy-web-app/ui-kit';
-import {
+import React, {
   FormEventHandler,
   useCallback,
   useEffect,
   useRef,
   useState,
 } from 'react';
-import { MemoizedDataSourceController, Option } from './data-source-controller';
-import { KeyboardController } from '@fancy-web-app/smart-suggests';
+import { Option } from '../controllers/data-source-controller';
+import { Controllers } from '../controllers/provider';
 
-const dataSourceController = new MemoizedDataSourceController('/api/langs');
-const keyboardSuggestsController = new KeyboardController({
-  dataSourceController,
-});
-
-export function DropdownController() {
+interface Props {
+  controllers: Controllers;
+}
+export function DropdownController({
+  controllers: { keyboardController, dataSourceController },
+}: Props) {
   const [options, setOptions] = useState<Option[]>([]);
   const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
   const [isDropdownOpened, setIsDropdownOpened] = useState(false);
@@ -28,7 +28,7 @@ export function DropdownController() {
     }
     inputRef?.current?.focus();
   }, [options.length, inputRef]);
-  const onClickOutside = useCallback(() => {
+  const closeDropdown = useCallback(() => {
     setIsDropdownOpened(false);
   }, []);
   const onInput: FormEventHandler<HTMLInputElement> = useCallback(
@@ -40,20 +40,24 @@ export function DropdownController() {
   const onUpdate = useCallback(() => {
     setOptions(dataSourceController.options);
     setSelectedOptions(dataSourceController.selectedOptions);
-    setHoveredOptionIndex(keyboardSuggestsController.getHoveredOptionIndex());
+    setHoveredOptionIndex(keyboardController.getHoveredOptionIndex());
   }, []);
   useEffect(() => {
     dataSourceController.on('update', onUpdate);
-    keyboardSuggestsController.on('update', onUpdate);
+    keyboardController.on('update', onUpdate);
 
     return () => {
       dataSourceController.off('update', onUpdate);
-      keyboardSuggestsController.off('update', onUpdate);
+      keyboardController.off('update', onUpdate);
     };
   }, [onUpdate]);
   const toggleDropdown = useCallback(() => {
     setIsDropdownOpened((prevState) => !prevState);
   }, []);
+  const onEscPressed = useCallback(() => {
+    closeDropdown();
+    keyboardController.onEscPressed();
+  }, [closeDropdown]);
 
   return (
     <Dropdown
@@ -69,15 +73,17 @@ export function DropdownController() {
         value: dataSourceController.searchString,
         placeholder: options.length ? 'Type to search...' : 'No items found',
       }}
-      onClickOutside={onClickOutside}
-      onBackspacePressed={keyboardSuggestsController.onBackspacePressed}
-      onArrowUp={keyboardSuggestsController.onArrowUp}
-      onArrowDown={keyboardSuggestsController.onArrowDown}
-      onEnterPressed={keyboardSuggestsController.onEnterPressed}
-      onOptionHover={keyboardSuggestsController.setHoveredOptionIndex}
+      onClickOutside={closeDropdown}
+      onBackspacePressed={keyboardController.onBackspacePressed}
+      onArrowUp={keyboardController.onArrowUp}
+      onArrowDown={keyboardController.onArrowDown}
+      onEnterPressed={keyboardController.onEnterPressed}
+      onOptionHover={keyboardController.setHoveredOptionIndex}
       optionsContainerRef={optionsContainerRef}
       inputRef={inputRef}
       onAngleButtonClick={toggleDropdown}
+      onEscPressed={onEscPressed}
+      dropdownOverlay={document.body}
     />
   );
 }

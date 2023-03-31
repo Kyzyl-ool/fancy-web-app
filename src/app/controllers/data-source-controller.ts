@@ -10,10 +10,9 @@ export interface Option {
   label: string;
 }
 
-const memoizer = new Memoizer({ cacheMaxSize: 100 });
-
 export class MemoizedDataSourceController extends DataSourceController<Option> {
   endpoint: string;
+  protected memoizer: Memoizer = new Memoizer({ cacheMaxSize: 100 });
 
   constructor(endpoint: string) {
     super({ pageSize: PAGE_SIZE, bufferSize: PAGE_SIZE * 2 });
@@ -21,7 +20,7 @@ export class MemoizedDataSourceController extends DataSourceController<Option> {
     this.init();
   }
 
-  protected _fetchPage = memoizer.memoizeFn(
+  protected _fetchPage = this.memoizer.memoizeFn(
     async (search: string, pageNumber: number): Promise<Option[]> => {
       const { data } = await axios.get(this.endpoint, {
         params: {

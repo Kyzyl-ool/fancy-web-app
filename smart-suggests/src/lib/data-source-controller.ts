@@ -10,7 +10,7 @@ export interface Option {
 }
 
 export abstract class DataSourceController<
-  OptionType extends Option
+  OptionType extends Option = Option
 > extends EventEmitter {
   protected pageSize: number;
   protected bufferSize: number;

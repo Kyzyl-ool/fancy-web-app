@@ -5,7 +5,9 @@ interface Params<T extends Option> {
   dataSourceController: DataSourceController<T>;
 }
 
-export class KeyboardController<T extends Option> extends EventEmitter {
+export class KeyboardController<
+  T extends Option = Option
+> extends EventEmitter {
   protected dataSourceController: DataSourceController<T>;
   protected hoveredOptionIndex = 0;
 
@@ -33,6 +35,10 @@ export class KeyboardController<T extends Option> extends EventEmitter {
     }
     this.dataSourceController.onSelectOption(option.key);
     this.dataSourceController.setSearchString('');
+    this.emit('update');
+  };
+  onEscPressed = () => {
+    this.hoveredOptionIndex = 0;
     this.emit('update');
   };
   onBackspacePressed = () => {

@@ -11,79 +11,34 @@ interface Option {
   label: React.ReactNode;
 }
 
-export interface DropdownProps
-  extends Omit<HTMLProps<HTMLElement>, 'onSelect' | 'onInput'> {
-  /**
-   * Opens dropdown
-   */
-  isDropdownOpened: boolean;
-  /**
-   * Options to select
-   */
-  options: Option[];
-  /**
-   * Selected options
-   */
-  selectedOptions: Option[];
-  /**
-   * When option was clicked or selected from keyboard
-   * @param option
-   */
-  onSelect: (optionKey: string) => void;
-  /**
-   * When dropdown itself was clicked
-   */
-  onClick: () => void;
-  /**
-   * When removing selected option clicking by cross or pressing Backspace from keyboard
-   * @param option
-   */
-  onDeselect: (optionKey: string) => void;
-  /**
-   * Dropdown option to be hovered
-   */
-  hoveredOptionIndex: number;
-  dropdownOverlay?: HTMLElement;
-  onClickOutside: () => void;
-  inputProps: Omit<HTMLProps<HTMLInputElement>, 'ref'>;
-  inputRef: React.RefObject<HTMLInputElement>;
-  onBackspacePressed: () => void;
-  onArrowUp: () => void;
-  onArrowDown: () => void;
-  onEnterPressed: () => void;
-  onOptionHover: (optionIndex: number) => void;
-  optionsContainerRef: React.RefObject<HTMLDivElement>;
-  onAngleButtonClick: () => void;
-}
-
-export function Dropdown({
-  className,
-  isDropdownOpened,
-  hoveredOptionIndex,
-  options,
-  onClick,
-  onDeselect,
-  onSelect,
-  dropdownOverlay = document.body,
-  onClickOutside,
-  inputProps,
-  selectedOptions,
-  onBackspacePressed,
-  onArrowUp,
-  onArrowDown,
-  onEnterPressed,
-  onOptionHover,
+const DropdownOptions = ({
   optionsContainerRef,
+  hoveredOptionIndex,
+  onOptionHover,
+  options,
+  onSelect,
+  dropdownOverlay,
+  onEscPressed,
   inputRef,
-  onAngleButtonClick,
-}: DropdownProps) {
-  const containerRef = useRef(null);
-
-  useClickOutside({
-    refs: [containerRef, optionsContainerRef],
-    onClickOutside,
-  });
-
+  onArrowDown,
+  onArrowUp,
+  onBackspacePressed,
+  onEnterPressed,
+}: Pick<
+  DropdownProps,
+  | 'optionsContainerRef'
+  | 'hoveredOptionIndex'
+  | 'onOptionHover'
+  | 'options'
+  | 'onSelect'
+  | 'dropdownOverlay'
+  | 'inputRef'
+  | 'onBackspacePressed'
+  | 'onArrowUp'
+  | 'onArrowDown'
+  | 'onEnterPressed'
+  | 'onEscPressed'
+>) => {
   const keyboardHandler = useCallback(
     ({ key }: KeyboardEvent) => {
       if (inputRef?.current === document.activeElement) {
@@ -146,10 +101,15 @@ export function Dropdown({
             onEnterPressed();
             break;
           }
+          case 'Escape': {
+            onEscPressed();
+            break;
+          }
         }
       }
     },
     [
+      onEscPressed,
       hoveredOptionIndex,
       inputRef,
       onArrowDown,
@@ -167,6 +127,115 @@ export function Dropdown({
       document.removeEventListener('keydown', keyboardHandler);
     };
   }, [keyboardHandler]);
+
+  return (
+    <>
+      {ReactDOM.createPortal(
+        <div className={styles['options-container']} ref={optionsContainerRef}>
+          {options.map(({ key, label }, index) => (
+            <div
+              key={key}
+              className={classNames(
+                styles['option'],
+                hoveredOptionIndex === index && styles['option-hovered']
+              )}
+              onClick={() => onSelect(key)}
+              onMouseEnter={() => onOptionHover(index)}
+            >
+              {label}
+            </div>
+          ))}
+          {!options.length && (
+            <div
+              className={classNames(
+                styles['option'],
+                styles['empty-option-placeholder']
+              )}
+            >
+              Empty
+            </div>
+          )}
+        </div>,
+        dropdownOverlay
+      )}
+    </>
+  );
+};
+
+export interface DropdownProps
+  extends Omit<HTMLProps<HTMLElement>, 'onSelect' | 'onInput'> {
+  /**
+   * Opens dropdown
+   */
+  isDropdownOpened: boolean;
+  /**
+   * Options to select
+   */
+  options: Option[];
+  /**
+   * Selected options
+   */
+  selectedOptions: Option[];
+  /**
+   * When option was clicked or selected from keyboard
+   * @param option
+   */
+  onSelect: (optionKey: string) => void;
+  /**
+   * When dropdown itself was clicked
+   */
+  onClick: () => void;
+  /**
+   * When removing selected option clicking by cross or pressing Backspace from keyboard
+   * @param option
+   */
+  onDeselect: (optionKey: string) => void;
+  /**
+   * Dropdown option to be hovered
+   */
+  hoveredOptionIndex: number;
+  dropdownOverlay: HTMLElement;
+  onClickOutside: () => void;
+  inputProps: Omit<HTMLProps<HTMLInputElement>, 'ref'>;
+  inputRef: React.RefObject<HTMLInputElement>;
+  onBackspacePressed: () => void;
+  onArrowUp: () => void;
+  onArrowDown: () => void;
+  onEnterPressed: () => void;
+  onOptionHover: (optionIndex: number) => void;
+  optionsContainerRef: React.RefObject<HTMLDivElement>;
+  onAngleButtonClick: () => void;
+  onEscPressed: () => void;
+}
+
+export function Dropdown({
+  className,
+  isDropdownOpened,
+  hoveredOptionIndex,
+  options,
+  onClick,
+  onDeselect,
+  onSelect,
+  dropdownOverlay = document.body,
+  onClickOutside,
+  inputProps,
+  selectedOptions,
+  onBackspacePressed,
+  onArrowUp,
+  onArrowDown,
+  onEnterPressed,
+  onOptionHover,
+  optionsContainerRef,
+  inputRef,
+  onAngleButtonClick,
+  onEscPressed,
+}: DropdownProps) {
+  const containerRef = useRef(null);
+
+  useClickOutside({
+    refs: [containerRef, optionsContainerRef],
+    onClickOutside,
+  });
 
   return (
     <div
@@ -210,38 +279,22 @@ export function Dropdown({
           <AngleIcon />
         </div>
       </div>
-      {isDropdownOpened &&
-        ReactDOM.createPortal(
-          <div
-            className={styles['options-container']}
-            ref={optionsContainerRef}
-          >
-            {options.map(({ key, label }, index) => (
-              <div
-                key={key}
-                className={classNames(
-                  styles['option'],
-                  hoveredOptionIndex === index && styles['option-hovered']
-                )}
-                onClick={() => onSelect(key)}
-                onMouseEnter={() => onOptionHover(index)}
-              >
-                {label}
-              </div>
-            ))}
-            {!options.length && (
-              <div
-                className={classNames(
-                  styles['option'],
-                  styles['empty-option-placeholder']
-                )}
-              >
-                Empty
-              </div>
-            )}
-          </div>,
-          dropdownOverlay
-        )}
+      {isDropdownOpened && (
+        <DropdownOptions
+          optionsContainerRef={optionsContainerRef}
+          hoveredOptionIndex={hoveredOptionIndex}
+          onOptionHover={onOptionHover}
+          options={options}
+          onSelect={onSelect}
+          dropdownOverlay={dropdownOverlay}
+          inputRef={inputRef}
+          onBackspacePressed={onBackspacePressed}
+          onArrowUp={onArrowUp}
+          onArrowDown={onArrowDown}
+          onEnterPressed={onEnterPressed}
+          onEscPressed={onEscPressed}
+        />
+      )}
     </div>
   );
 }
