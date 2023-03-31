@@ -83,31 +83,6 @@ export function Dropdown({
   const keyboardHandler = useCallback(
     ({ key }: KeyboardEvent) => {
       if (inputRef?.current === document.activeElement) {
-        if (optionsContainerRef?.current) {
-          const option =
-            optionsContainerRef.current.querySelector('* > *:first-child');
-          const optionHeight = option!.getBoundingClientRect().height;
-
-          const dropdownHeight =
-            optionsContainerRef.current.getBoundingClientRect().height;
-
-          if (
-            optionsContainerRef.current.scrollTop / optionHeight + 3 >
-            hoveredOptionIndex
-          ) {
-            optionsContainerRef.current.scrollTop =
-              (hoveredOptionIndex - 3) * optionHeight;
-          } else if (
-            optionsContainerRef.current.scrollTop / optionHeight +
-              dropdownHeight / optionHeight -
-              4 <
-            hoveredOptionIndex
-          ) {
-            optionsContainerRef.current.scrollTop =
-              (hoveredOptionIndex - dropdownHeight / optionHeight + 4) *
-              optionHeight;
-          }
-        }
         switch (key) {
           case 'Backspace': {
             onBackspacePressed();
@@ -115,10 +90,52 @@ export function Dropdown({
           }
           case 'ArrowUp': {
             onArrowUp();
+            if (optionsContainerRef?.current) {
+              const option =
+                optionsContainerRef.current.querySelector('* > *:first-child');
+              const optionHeight = option!.getBoundingClientRect().height;
+
+              const optionsCount =
+                optionsContainerRef.current.querySelectorAll('* > *').length;
+
+              if (hoveredOptionIndex === 0) {
+                optionsContainerRef.current.scrollTop =
+                  optionsCount * optionHeight;
+              } else if (
+                optionsContainerRef.current.scrollTop / optionHeight + 2 >
+                hoveredOptionIndex
+              ) {
+                optionsContainerRef.current.scrollTop =
+                  (hoveredOptionIndex - 2) * optionHeight;
+              }
+            }
             break;
           }
           case 'ArrowDown': {
             onArrowDown();
+            if (optionsContainerRef?.current) {
+              const option =
+                optionsContainerRef.current.querySelector('* > *:first-child');
+              const optionHeight = option!.getBoundingClientRect().height;
+
+              const dropdownHeight =
+                optionsContainerRef.current.getBoundingClientRect().height;
+              const optionsCount =
+                optionsContainerRef.current.querySelectorAll('* > *').length;
+
+              if (hoveredOptionIndex === optionsCount - 1) {
+                optionsContainerRef.current.scrollTop = 0;
+              } else if (
+                optionsContainerRef.current.scrollTop / optionHeight +
+                  dropdownHeight / optionHeight -
+                  3 <
+                hoveredOptionIndex
+              ) {
+                optionsContainerRef.current.scrollTop =
+                  (hoveredOptionIndex - dropdownHeight / optionHeight + 3) *
+                  optionHeight;
+              }
+            }
             break;
           }
           case 'Enter': {

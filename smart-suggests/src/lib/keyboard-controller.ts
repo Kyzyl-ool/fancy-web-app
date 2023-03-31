@@ -14,11 +14,6 @@ export class KeyboardController<T extends Option> extends EventEmitter {
     this.dataSourceController = dataSourceController;
   }
 
-  get hoveredOptionKey(): string {
-    return (
-      this.dataSourceController.options[this.hoveredOptionIndex]?.key || ''
-    );
-  }
   onArrowUp = () => {
     this.hoveredOptionIndex =
       (this.hoveredOptionIndex - 1 + this.dataSourceController.options.length) %
@@ -31,7 +26,12 @@ export class KeyboardController<T extends Option> extends EventEmitter {
     this.emit('update');
   };
   onEnterPressed = () => {
-    this.dataSourceController.onSelectOption(this.hoveredOptionKey);
+    const { options } = this.dataSourceController;
+    const option = options[this.hoveredOptionIndex];
+    if (this.hoveredOptionIndex === options.length - 1) {
+      this.hoveredOptionIndex--;
+    }
+    this.dataSourceController.onSelectOption(option.key);
     this.emit('update');
   };
   onBackspacePressed = () => {
