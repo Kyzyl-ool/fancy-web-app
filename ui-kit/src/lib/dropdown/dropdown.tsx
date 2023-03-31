@@ -1,11 +1,5 @@
 import styles from './dropdown.module.scss';
-import React, {
-  HTMLProps,
-  UIEventHandler,
-  useCallback,
-  useEffect,
-  useRef,
-} from 'react';
+import React, { HTMLProps, useCallback, useEffect, useRef } from 'react';
 import classNames from 'classnames';
 import ReactDOM from 'react-dom';
 import { useClickOutside } from '@fancy-web-app/react-ui-utils';
@@ -47,7 +41,7 @@ export interface DropdownProps
   /**
    * Dropdown option to be hovered
    */
-  hoveredOptionKey?: string;
+  hoveredOptionIndex: number;
   dropdownOverlay?: HTMLElement;
   onClickOutside: () => void;
   inputProps: Omit<HTMLProps<HTMLInputElement>, 'ref'>;
@@ -55,17 +49,14 @@ export interface DropdownProps
   onArrowUp: () => void;
   onArrowDown: () => void;
   onEnterPressed: () => void;
-  /**
-   * Dropdown options container scroll event handler
-   * @param event
-   */
-  onScroll: UIEventHandler<HTMLDivElement>;
+  onOptionHover: (optionIndex: number) => void;
+  optionsContainerRef: React.RefObject<HTMLDivElement>;
 }
 
 export function Dropdown({
   className,
   isDropdownOpened,
-  hoveredOptionKey,
+  hoveredOptionIndex,
   options,
   onClick,
   onDeselect,
@@ -78,10 +69,10 @@ export function Dropdown({
   onArrowUp,
   onArrowDown,
   onEnterPressed,
-  onScroll,
+  onOptionHover,
+  optionsContainerRef,
 }: DropdownProps) {
   const containerRef = useRef(null);
-  const optionsContainerRef = useRef(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useClickOutside({
@@ -92,6 +83,31 @@ export function Dropdown({
   const keyboardHandler = useCallback(
     ({ key }: KeyboardEvent) => {
       if (inputRef?.current === document.activeElement) {
+        if (optionsContainerRef?.current) {
+          const option =
+            optionsContainerRef.current.querySelector('* > *:first-child');
+          const optionHeight = option!.getBoundingClientRect().height;
+
+          const dropdownHeight =
+            optionsContainerRef.current.getBoundingClientRect().height;
+
+          if (
+            optionsContainerRef.current.scrollTop / optionHeight + 3 >
+            hoveredOptionIndex
+          ) {
+            optionsContainerRef.current.scrollTop =
+              (hoveredOptionIndex - 3) * optionHeight;
+          } else if (
+            optionsContainerRef.current.scrollTop / optionHeight +
+              dropdownHeight / optionHeight -
+              4 <
+            hoveredOptionIndex
+          ) {
+            optionsContainerRef.current.scrollTop =
+              (hoveredOptionIndex - dropdownHeight / optionHeight + 4) *
+              optionHeight;
+          }
+        }
         switch (key) {
           case 'Backspace': {
             onBackspacePressed();
@@ -112,7 +128,14 @@ export function Dropdown({
         }
       }
     },
-    [inputRef, onArrowDown, onArrowUp, onBackspacePressed, onEnterPressed]
+    [
+      hoveredOptionIndex,
+      onArrowDown,
+      onArrowUp,
+      onBackspacePressed,
+      onEnterPressed,
+      optionsContainerRef,
+    ]
   );
 
   useEffect(() => {
@@ -158,16 +181,16 @@ export function Dropdown({
           <div
             className={styles['options-container']}
             ref={optionsContainerRef}
-            onScroll={onScroll}
           >
-            {options.map(({ key, label }) => (
+            {options.map(({ key, label }, index) => (
               <div
                 key={key}
                 className={classNames(
                   styles['option'],
-                  hoveredOptionKey === key && styles['option-hovered']
+                  hoveredOptionIndex === index && styles['option-hovered']
                 )}
                 onClick={() => onSelect(key)}
+                onMouseEnter={() => onOptionHover(index)}
               >
                 {label}
               </div>

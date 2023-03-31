@@ -1,9 +1,9 @@
 import { Dropdown } from '@fancy-web-app/ui-kit';
 import {
   FormEventHandler,
-  UIEventHandler,
   useCallback,
   useEffect,
+  useRef,
   useState,
 } from 'react';
 import { MemoizedDataSourceController, Option } from './data-source-controller';
@@ -20,7 +20,8 @@ export function DropdownController(props: DropdownControllerProps) {
   const [options, setOptions] = useState<Option[]>([]);
   const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
   const [isDropdownOpened, setIsDropdownOpened] = useState(false);
-  const [hoveredOptionKey, setHoveredOptionKey] = useState<string>();
+  const [hoveredOptionIndex, setHoveredOptionIndex] = useState(0);
+  const optionsContainerRef = useRef<HTMLDivElement>(null);
 
   const onClick = useCallback(() => {
     if (options.length) {
@@ -39,7 +40,7 @@ export function DropdownController(props: DropdownControllerProps) {
   const onUpdate = useCallback(() => {
     setOptions(dataSourceController.options);
     setSelectedOptions(dataSourceController.selectedOptions);
-    setHoveredOptionKey(keyboardSuggestsController.hoveredOptionKey);
+    setHoveredOptionIndex(keyboardSuggestsController.getHoveredOptionIndex());
   }, []);
   useEffect(() => {
     dataSourceController.on('update', onUpdate);
@@ -50,19 +51,13 @@ export function DropdownController(props: DropdownControllerProps) {
       keyboardSuggestsController.off('update', onUpdate);
     };
   }, [onUpdate]);
-  const onScroll: UIEventHandler<HTMLDivElement> = useCallback(
-    ({ currentTarget: { scrollTop } }) => {
-      console.log(scrollTop);
-    },
-    []
-  );
 
   return (
     <Dropdown
       options={options}
       selectedOptions={selectedOptions}
       isDropdownOpened={isDropdownOpened}
-      hoveredOptionKey={hoveredOptionKey}
+      hoveredOptionIndex={hoveredOptionIndex}
       onClick={onClick}
       onSelect={dataSourceController.onSelectOption}
       onDeselect={dataSourceController.onRemoveSelectedOption}
@@ -76,7 +71,8 @@ export function DropdownController(props: DropdownControllerProps) {
       onArrowUp={keyboardSuggestsController.onArrowUp}
       onArrowDown={keyboardSuggestsController.onArrowDown}
       onEnterPressed={keyboardSuggestsController.onEnterPressed}
-      onScroll={onScroll}
+      onOptionHover={keyboardSuggestsController.setHoveredOptionIndex}
+      optionsContainerRef={optionsContainerRef}
     />
   );
 }

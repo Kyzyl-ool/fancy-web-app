@@ -38,4 +38,12 @@ export class KeyboardController<T extends Option> extends EventEmitter {
     this.onArrowDown();
     this.dataSourceController.onRemoveLastOption();
   };
+
+  getHoveredOptionIndex = () => {
+    return this.hoveredOptionIndex;
+  };
+  setHoveredOptionIndex = (newIndex: number) => {
+    this.hoveredOptionIndex = newIndex;
+    this.emit('update');
+  };
 }
