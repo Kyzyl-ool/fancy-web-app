@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import ReactDOM from 'react-dom';
 import { useClickOutside } from '@fancy-web-app/react-ui-utils';
 import { ReactComponent as CrossIcon } from '../../icons/cross.svg';
+import { ReactComponent as AngleIcon } from '../../icons/angle.svg';
 
 interface Option {
   key: string;
@@ -45,6 +46,7 @@ export interface DropdownProps
   dropdownOverlay?: HTMLElement;
   onClickOutside: () => void;
   inputProps: Omit<HTMLProps<HTMLInputElement>, 'ref'>;
+  inputRef: React.RefObject<HTMLInputElement>;
   onBackspacePressed: () => void;
   onArrowUp: () => void;
   onArrowDown: () => void;
@@ -71,9 +73,9 @@ export function Dropdown({
   onEnterPressed,
   onOptionHover,
   optionsContainerRef,
+  inputRef,
 }: DropdownProps) {
   const containerRef = useRef(null);
-  const inputRef = useRef<HTMLInputElement>(null);
 
   useClickOutside({
     refs: [containerRef, optionsContainerRef],
@@ -192,6 +194,14 @@ export function Dropdown({
           ref={inputRef}
           {...inputProps}
         />
+        <div
+          className={classNames(
+            styles['arrow'],
+            isDropdownOpened && styles['arrow-active']
+          )}
+        >
+          <AngleIcon />
+        </div>
       </div>
       {isDropdownOpened &&
         ReactDOM.createPortal(

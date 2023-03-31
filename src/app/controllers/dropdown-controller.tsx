@@ -22,12 +22,14 @@ export function DropdownController(props: DropdownControllerProps) {
   const [isDropdownOpened, setIsDropdownOpened] = useState(false);
   const [hoveredOptionIndex, setHoveredOptionIndex] = useState(0);
   const optionsContainerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const onClick = useCallback(() => {
     if (options.length) {
       setIsDropdownOpened(true);
     }
-  }, [options.length]);
+    inputRef?.current?.focus();
+  }, [options.length, inputRef]);
   const onClickOutside = useCallback(() => {
     setIsDropdownOpened(false);
   }, []);
@@ -73,6 +75,7 @@ export function DropdownController(props: DropdownControllerProps) {
       onEnterPressed={keyboardSuggestsController.onEnterPressed}
       onOptionHover={keyboardSuggestsController.setHoveredOptionIndex}
       optionsContainerRef={optionsContainerRef}
+      inputRef={inputRef}
     />
   );
 }

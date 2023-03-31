@@ -1,16 +1,57 @@
 @import "../../theme/theme";
 
 .operands-container {
-  padding: 16px 24px;
+  padding: 16px 56px 16px 24px;
   border-width: 1px;
   border-radius: $size-border-radius;
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+  cursor: text;
+  position: relative;
 
   &-opened {
     border-radius: $size-border-radius $size-border-radius 0 0;
   }
+}
+
+.arrow {
+  position: absolute;
+  right: 12px;
+  top: 0px;
+  bottom: 0;
+  width: 40px;
+  height: 40px;
+  margin: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  transform: scale(1.5);
+
+  path {
+    fill: $color-text-base;
+  }
+
+  &:hover {
+    path {
+      fill: $color-text-hover;
+    }
+  }
+
+  &:active {
+    path {
+      fill: $color-text-active;
+    }
+  }
+}
+
+.arrow-active {
+  path {
+    fill: $color-text-active;
+  }
+  transform: scale(1.5) rotate(180deg);
 }
 
 .options-container {
@@ -56,6 +97,7 @@
     background-color: $color-bg-hover;
     cursor: pointer;
   }
+
   &:active {
     background-color: $color-bg-active;
   }
@@ -91,6 +133,7 @@
 .operand-close-button {
   display: inline-flex;
   cursor: pointer;
+
   path {
     fill: $color-text-base;
   }
@@ -100,6 +143,7 @@
       fill: $color-text-hover;
     }
   }
+
   &:active {
     path {
       fill: $color-text-active;

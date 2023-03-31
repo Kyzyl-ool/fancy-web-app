@@ -32,6 +32,7 @@ export class KeyboardController<T extends Option> extends EventEmitter {
       this.hoveredOptionIndex--;
     }
     this.dataSourceController.onSelectOption(option.key);
+    this.dataSourceController.setSearchString('');
     this.emit('update');
   };
   onBackspacePressed = () => {
