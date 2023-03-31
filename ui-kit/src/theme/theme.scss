@@ -1,17 +1,16 @@
-$color-primary: #5f5ff5;
-$color-bg-base: #fefefe;
-$color-text-base: #000;
+$color-bg-base: #ffffff;
+$color-text-base: #346297;
 $size-border-radius: 8px;
 
-$color-bg-hover: darken($color-bg-base, 10%);
-$color-bg-active: darken($color-bg-base, 15%);
+$color-bg-hover: darken($color-bg-base, 5%);
+$color-bg-active: darken($color-bg-base, 10%);
 
-$color-bg-secondary: darken($color-bg-base, 10%);
-$color-bg-secondary-hover: darken($color-bg-secondary, 10%);
-$color-bg-secondary-active: darken($color-bg-secondary, 15%);
+$color-bg-secondary: darken($color-bg-base, 5%);
+$color-bg-secondary-hover: darken($color-bg-secondary, 5%);
+$color-bg-secondary-active: darken($color-bg-secondary, 10%);
 
-$color-border: darken($color-bg-base, 50%);
+$color-border: darken($color-bg-base, 20%);
 
 $color-text-disabled: lighten($color-text-base, 50%);
-$color-text-hover: lighten($color-text-base, 20%);
-$color-text-active: lighten($color-text-base, 40%);
+$color-text-hover: lighten($color-text-base, 10%);
+$color-text-active: lighten($color-text-base, 20%);
