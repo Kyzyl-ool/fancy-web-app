@@ -7,7 +7,7 @@ RUN npm ci
 COPY . .
 RUN npx nx run fancy-web-app:build:production
 
-FROM nginx:1.20
+FROM nginx:alpine
 
 WORKDIR /usr/share/nginx/html
 RUN rm -rf ./*
