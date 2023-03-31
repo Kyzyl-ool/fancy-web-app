@@ -4,16 +4,18 @@ services:
   backend:
     container_name: fancy-web-app-backend
     ports:
-      - 3000:3000
+      - "3000:3000"
     build:
       dockerfile: ./fancy-backend/Dockerfile
       context: .
     command:
       - ./dist/fancy-backend/main.js
+    environment:
+      HOST: 0.0.0.0
   frontend:
     container_name: fancy-web-app-frontend
     ports:
-      - 80:80
+      - "80:80"
     build:
       dockerfile: ./Dockerfile
       context: .
