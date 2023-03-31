@@ -14,6 +14,14 @@ export class KeyboardController<
   constructor({ dataSourceController }: Params<T>) {
     super();
     this.dataSourceController = dataSourceController;
+
+    this.dataSourceController.on('update', () => {
+      if (this.hoveredOptionIndex >= this.dataSourceController.options.length) {
+        this.hoveredOptionIndex = this.dataSourceController.options.length - 1;
+      } else if (this.hoveredOptionIndex < 0) {
+        this.hoveredOptionIndex = 0;
+      }
+    });
   }
 
   onArrowUp = () => {
