@@ -17,13 +17,13 @@ const DropdownOptions = ({
   onOptionHover,
   options,
   onSelect,
-  dropdownOverlay,
   onEscPressed,
   inputRef,
   onArrowDown,
   onArrowUp,
   onBackspacePressed,
   onEnterPressed,
+  dropdownOverlay,
 }: Pick<
   DropdownProps,
   | 'optionsContainerRef'
@@ -31,14 +31,15 @@ const DropdownOptions = ({
   | 'onOptionHover'
   | 'options'
   | 'onSelect'
-  | 'dropdownOverlay'
   | 'inputRef'
   | 'onBackspacePressed'
   | 'onArrowUp'
   | 'onArrowDown'
   | 'onEnterPressed'
   | 'onEscPressed'
->) => {
+> & {
+  dropdownOverlay: HTMLElement;
+}) => {
   const keyboardHandler = useCallback(
     ({ key }: KeyboardEvent) => {
       if (inputRef?.current === document.activeElement) {
@@ -194,7 +195,6 @@ export interface DropdownProps
    * Dropdown option to be hovered
    */
   hoveredOptionIndex: number;
-  dropdownOverlay: HTMLElement;
   onClickOutside: () => void;
   inputProps: Omit<HTMLProps<HTMLInputElement>, 'ref'>;
   inputRef: React.RefObject<HTMLInputElement>;
@@ -216,7 +216,6 @@ export function Dropdown({
   onClick,
   onDeselect,
   onSelect,
-  dropdownOverlay = document.body,
   onClickOutside,
   inputProps,
   selectedOptions,
@@ -286,7 +285,7 @@ export function Dropdown({
           onOptionHover={onOptionHover}
           options={options}
           onSelect={onSelect}
-          dropdownOverlay={dropdownOverlay}
+          dropdownOverlay={containerRef.current || document.body}
           inputRef={inputRef}
           onBackspacePressed={onBackspacePressed}
           onArrowUp={onArrowUp}

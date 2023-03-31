@@ -85,7 +85,6 @@ export function DropdownController({
       inputRef={inputRef}
       onAngleButtonClick={toggleDropdown}
       onEscPressed={onEscPressed}
-      dropdownOverlay={document.body}
     />
   );
 }

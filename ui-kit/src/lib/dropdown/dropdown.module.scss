@@ -61,6 +61,10 @@
 
 .options-container {
   border-width: 0 1px 1px 1px;
+  position: absolute;
+  z-index: 1;
+  background-color: $color-bg-base;
+  width: 500px;
 }
 
 .operands-container, .options-container {
