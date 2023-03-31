@@ -46,7 +46,8 @@
       },
       "configurations": {
         "development": {
-          "buildTarget": "fancy-web-app:build:development"
+          "buildTarget": "fancy-web-app:build:development",
+          "minify": "hidden"
         },
         "production": {
           "buildTarget": "fancy-web-app:build:production"

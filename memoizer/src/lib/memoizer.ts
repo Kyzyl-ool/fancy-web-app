@@ -1,4 +1,3 @@
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import * as hash from 'object-hash';
 
 interface Options {
@@ -20,7 +19,7 @@ export class Memoizer {
     addToCache = addToCache.bind(this);
 
     return function (...args) {
-      const hashStr = hash([fn, args]);
+      const hashStr = hash.sha1([fn, args]);
       if (hashStr in cache) {
         return cache[hashStr];
       }
