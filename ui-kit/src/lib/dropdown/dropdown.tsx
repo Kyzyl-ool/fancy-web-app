@@ -252,7 +252,7 @@ export function Dropdown({
       >
         {selectedOptions.map(({ key, label }) => (
           <div key={key} className={styles['operand']}>
-            {label}
+            <p>{label}</p>
             <div
               className={styles['operand-close-button']}
               onClick={() => onDeselect(key)}
