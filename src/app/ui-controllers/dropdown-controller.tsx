@@ -58,6 +58,14 @@ export function DropdownController({
     closeDropdown();
     keyboardController.onEscPressed();
   }, [closeDropdown]);
+  const onBlur = useCallback(() => {
+    inputRef?.current?.blur();
+    closeDropdown();
+  }, [inputRef, closeDropdown]);
+  const onFocus = useCallback(() => {
+    inputRef?.current?.focus();
+    onClick();
+  }, [inputRef, onClick]);
 
   return (
     <Dropdown
@@ -72,8 +80,8 @@ export function DropdownController({
         onInput,
         value: dataSourceController.searchString,
         placeholder: options.length ? 'Type to search...' : 'No items found',
-        onFocus: onClick,
-        onBlur: closeDropdown,
+        onFocus,
+        onBlur,
       }}
       onClickOutside={closeDropdown}
       onBackspacePressed={keyboardController.onBackspacePressed}

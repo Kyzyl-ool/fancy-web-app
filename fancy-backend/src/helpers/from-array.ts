@@ -23,7 +23,7 @@ export const fromArray =
         filter(
           ({ key, label }) =>
             key.includes(searchString) ||
-            label.toLowerCase().includes(searchString)
+            label.toLowerCase().includes(searchString.toLowerCase())
         )
       );
     }
