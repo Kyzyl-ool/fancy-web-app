@@ -23,7 +23,8 @@ const DropdownOptions = ({
   onArrowUp,
   onBackspacePressed,
   onEnterPressed,
-  dropdownOverlay,
+  containerRef,
+  onClickOutside,
 }: Pick<
   DropdownProps,
   | 'optionsContainerRef'
@@ -37,8 +38,9 @@ const DropdownOptions = ({
   | 'onArrowDown'
   | 'onEnterPressed'
   | 'onEscPressed'
+  | 'onClickOutside'
 > & {
-  dropdownOverlay: HTMLElement;
+  containerRef: React.RefObject<HTMLDivElement>;
 }) => {
   const keyboardHandler = useCallback(
     ({ key }: KeyboardEvent) => {
@@ -129,6 +131,11 @@ const DropdownOptions = ({
     };
   }, [keyboardHandler]);
 
+  useClickOutside({
+    refs: [containerRef, optionsContainerRef],
+    onClickOutside,
+  });
+
   return (
     <>
       {ReactDOM.createPortal(
@@ -157,7 +164,7 @@ const DropdownOptions = ({
             </div>
           )}
         </div>,
-        dropdownOverlay
+        containerRef.current || document.body
       )}
     </>
   );
@@ -231,11 +238,6 @@ export function Dropdown({
 }: DropdownProps) {
   const containerRef = useRef(null);
 
-  useClickOutside({
-    refs: [containerRef, optionsContainerRef],
-    onClickOutside,
-  });
-
   return (
     <div
       className={classNames(styles['container'], className)}
@@ -285,13 +287,14 @@ export function Dropdown({
           onOptionHover={onOptionHover}
           options={options}
           onSelect={onSelect}
-          dropdownOverlay={containerRef.current || document.body}
           inputRef={inputRef}
           onBackspacePressed={onBackspacePressed}
           onArrowUp={onArrowUp}
           onArrowDown={onArrowDown}
           onEnterPressed={onEnterPressed}
           onEscPressed={onEscPressed}
+          containerRef={containerRef}
+          onClickOutside={onClickOutside}
         />
       )}
     </div>

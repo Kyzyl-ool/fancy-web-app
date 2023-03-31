@@ -1,5 +1,6 @@
 import { Dropdown } from '@fancy-web-app/ui-kit';
 import React, {
+  FocusEventHandler,
   FormEventHandler,
   useCallback,
   useEffect,
@@ -58,7 +59,7 @@ export function DropdownController({
     closeDropdown();
     keyboardController.onEscPressed();
   }, [closeDropdown]);
-  const onBlur = useCallback(() => {
+  const onBlur: FocusEventHandler = useCallback(() => {
     inputRef?.current?.blur();
     closeDropdown();
   }, [inputRef, closeDropdown]);

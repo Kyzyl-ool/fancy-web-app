@@ -7,10 +7,11 @@ interface Params {
 
 export const useClickOutside = ({ refs, onClickOutside }: Params) => {
   const documentClickHandler = useCallback(
-    ({ target }: MouseEvent) => {
+    (event: MouseEvent) => {
+      event.preventDefault();
       const isClickedOutsideElements = refs.every((ref) => {
         if (ref?.current) {
-          if (!ref.current.contains(target as Node)) {
+          if (!ref.current.contains(event.target as Node)) {
             return true;
           }
         }
