@@ -37,6 +37,9 @@ export class KeyboardController<
   };
   onEnterPressed = () => {
     const { options } = this.dataSourceController;
+    if (!options.length) {
+      return;
+    }
     const option = options[this.hoveredOptionIndex];
     if (this.hoveredOptionIndex === options.length - 1) {
       this.hoveredOptionIndex--;
