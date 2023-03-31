@@ -1,0 +1,21 @@
+version: "3.5"
+
+services:
+  backend:
+    container_name: fancy-web-app-backend
+    ports:
+      - 3000:3000
+    build:
+      dockerfile: ./fancy-backend/Dockerfile
+      context: .
+    command:
+      - ./dist/fancy-backend/main.js
+  frontend:
+    container_name: fancy-web-app-frontend
+    ports:
+      - 80:80
+    build:
+      dockerfile: ./Dockerfile
+      context: .
+
+
